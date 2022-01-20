@@ -1,0 +1,3 @@
+[submodule "Assets/Benchmarker"]
+	path = Assets/Benchmarker
+	url = git@github.com:James-Frowen/Benchmarker.git
