@@ -19,6 +19,10 @@ namespace RunBenchmark
             yield return mirage.Start();
             yield return null;
 
+            var mirageCopy = new MirageWriter_Copy();
+            yield return mirageCopy.Start();
+            yield return null;
+
             var mirror = new MirrorWriter();
             yield return mirror.Start();
             yield return null;
@@ -118,6 +122,44 @@ namespace RunBenchmark
                 this.writer.WriteByte((byte)i);
                 this.writer.WriteByte((byte)i);
                 this.writer.WriteByte((byte)i);
+            }
+        }
+    }
+    public class MirageWriter_Copy : Benchmark
+    {
+        JamesFrowen.BitPacking.NetworkWriter writer;
+
+        protected override void Setup()
+        {
+            this.writer = new JamesFrowen.BitPacking.NetworkWriter(1500);
+        }
+        protected override void Teardown()
+        {
+            this.writer.Reset();
+            this.writer = null;
+        }
+
+        [BenchmarkMethod(name: "Mirage Copy")]
+        protected override void Code()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                this.writer.Reset();
+
+                byte b1 = (byte)i;
+                this.writer.PadAndCopy(b1);
+                this.writer.PadAndCopy(i);
+                this.writer.PadAndCopy(i);
+                ulong u1 = (ulong)i;
+                this.writer.PadAndCopy(u1);
+                byte b2 = (byte)i;
+                byte b3 = (byte)i;
+                byte b4 = (byte)i;
+                byte b5 = (byte)i;
+                this.writer.PadAndCopy(b2);
+                this.writer.PadAndCopy(b3);
+                this.writer.PadAndCopy(b4);
+                this.writer.PadAndCopy(b5);
             }
         }
     }
