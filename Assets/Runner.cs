@@ -68,6 +68,16 @@ namespace RunBenchmark
             Teardown();
         }
 
+        /// <summary>
+        /// Use for debugging, not for benchmarking
+        /// </summary>
+        public void RunOnce()
+        {
+            Setup();
+            Code();
+            Teardown();
+        }
+
         private void Warmup()
         {
             BenchmarkHelper.PauseRecording(true);
