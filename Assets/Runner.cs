@@ -1,7 +1,7 @@
-﻿using JamesFrowen.Benchmarker;
+﻿using System.Collections;
+using JamesFrowen.Benchmarker;
 using JamesFrowen.Benchmarker.Weaver;
 using Mirror;
-using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -57,34 +57,34 @@ namespace RunBenchmark
 
         public IEnumerator Start()
         {
-            this.Setup();
+            Setup();
             yield return null;
 
-            this.Warmup();
-            this.Measure();
+            Warmup();
+            Measure();
 
             yield return null;
 
-            this.Teardown();
+            Teardown();
         }
 
         private void Warmup()
         {
-            for (int i = 0; i < this.WarmupCount; i++)
+            for (int i = 0; i < WarmupCount; i++)
             {
-                for (int j = 0; j < this.Iterations; j++)
+                for (int j = 0; j < Iterations; j++)
                 {
-                    this.Code();
+                    Code();
                 }
             }
         }
         private void Measure()
         {
-            for (int i = 0; i < this.RunCount; i++)
+            for (int i = 0; i < RunCount; i++)
             {
-                for (int j = 0; j < this.Iterations; j++)
+                for (int j = 0; j < Iterations; j++)
                 {
-                    this.Code();
+                    Code();
                 }
 
                 BenchmarkHelper.NextFrame();
@@ -99,12 +99,12 @@ namespace RunBenchmark
 
         protected override void Setup()
         {
-            this.writer = new JamesFrowen.BitPacking.NetworkWriter(1500);
+            writer = new JamesFrowen.BitPacking.NetworkWriter(1500);
         }
         protected override void Teardown()
         {
-            this.writer.Reset();
-            this.writer = null;
+            writer.Reset();
+            writer = null;
         }
 
         [BenchmarkMethod(name: "Mirage")]
@@ -112,16 +112,16 @@ namespace RunBenchmark
         {
             for (int i = 0; i < 100; i++)
             {
-                this.writer.Reset();
+                writer.Reset();
 
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteInt32(i);
-                this.writer.WriteInt32(i);
-                this.writer.WriteUInt64((ulong)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteInt32(i);
+                writer.WriteInt32(i);
+                writer.WriteUInt64((ulong)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
             }
         }
     }
@@ -131,12 +131,12 @@ namespace RunBenchmark
 
         protected override void Setup()
         {
-            this.writer = new JamesFrowen.BitPacking.NetworkWriter(1500);
+            writer = new JamesFrowen.BitPacking.NetworkWriter(1500);
         }
         protected override void Teardown()
         {
-            this.writer.Reset();
-            this.writer = null;
+            writer.Reset();
+            writer = null;
         }
 
         [BenchmarkMethod(name: "Mirage Copy")]
@@ -144,22 +144,22 @@ namespace RunBenchmark
         {
             for (int i = 0; i < 100; i++)
             {
-                this.writer.Reset();
+                writer.Reset();
 
                 byte b1 = (byte)i;
-                this.writer.PadAndCopy(b1);
-                this.writer.PadAndCopy(i);
-                this.writer.PadAndCopy(i);
+                writer.PadAndCopy(b1);
+                writer.PadAndCopy(i);
+                writer.PadAndCopy(i);
                 ulong u1 = (ulong)i;
-                this.writer.PadAndCopy(u1);
+                writer.PadAndCopy(u1);
                 byte b2 = (byte)i;
                 byte b3 = (byte)i;
                 byte b4 = (byte)i;
                 byte b5 = (byte)i;
-                this.writer.PadAndCopy(b2);
-                this.writer.PadAndCopy(b3);
-                this.writer.PadAndCopy(b4);
-                this.writer.PadAndCopy(b5);
+                writer.PadAndCopy(b2);
+                writer.PadAndCopy(b3);
+                writer.PadAndCopy(b4);
+                writer.PadAndCopy(b5);
             }
         }
     }
@@ -168,12 +168,12 @@ namespace RunBenchmark
         Mirror.NetworkWriter writer;
         protected override void Setup()
         {
-            this.writer = new Mirror.NetworkWriter();
+            writer = new Mirror.NetworkWriter();
         }
         protected override void Teardown()
         {
-            this.writer.Reset();
-            this.writer = null;
+            writer.Reset();
+            writer = null;
         }
 
         [BenchmarkMethod(name: "Mirror")]
@@ -181,16 +181,16 @@ namespace RunBenchmark
         {
             for (int i = 0; i < 100; i++)
             {
-                this.writer.Reset();
+                writer.Reset();
 
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteInt(i);
-                this.writer.WriteInt(i);
-                this.writer.WriteULong((ulong)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
-                this.writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteInt(i);
+                writer.WriteInt(i);
+                writer.WriteULong((ulong)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
+                writer.WriteByte((byte)i);
             }
         }
     }
@@ -233,11 +233,11 @@ namespace RunBenchmark
         protected override void Setup()
         {
             // todo can you not reset writer? do you have to create new one each time
-            this.writer = new Unity.Netcode.FastBufferWriter(1500, Unity.Collections.Allocator.Temp);
+            writer = new Unity.Netcode.FastBufferWriter(1500, Unity.Collections.Allocator.Temp);
         }
         protected override void Teardown()
         {
-            this.writer.Dispose();
+            writer.Dispose();
         }
 
         [BenchmarkMethod(name: "Unity")]
@@ -245,17 +245,17 @@ namespace RunBenchmark
         {
             for (int i = 0; i < 100; i++)
             {
-                this.writer.Seek(0);
+                writer.Seek(0);
 
-                this.writer.TryBeginWrite(21);
-                this.writer.WriteValue((byte)i);
-                this.writer.WriteValue(i);
-                this.writer.WriteValue(i);
-                this.writer.WriteValue((ulong)i);
-                this.writer.WriteValue((byte)i);
-                this.writer.WriteValue((byte)i);
-                this.writer.WriteValue((byte)i);
-                this.writer.WriteValue((byte)i);
+                writer.TryBeginWrite(21);
+                writer.WriteValue((byte)i);
+                writer.WriteValue(i);
+                writer.WriteValue(i);
+                writer.WriteValue((ulong)i);
+                writer.WriteValue((byte)i);
+                writer.WriteValue((byte)i);
+                writer.WriteValue((byte)i);
+                writer.WriteValue((byte)i);
             }
         }
     }
