@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using JamesFrowen.Benchmarker;
 using JamesFrowen.Benchmarker.Weaver;
 using Mirror;
@@ -114,10 +114,8 @@ namespace RunBenchmark
         [BenchmarkMethod(name: "Mirage")]
         protected override void Code()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
-                writer.Reset();
-
                 writer.WriteByte((byte)i);
                 writer.WriteInt32(i);
                 writer.WriteInt32(i);
@@ -127,6 +125,8 @@ namespace RunBenchmark
                 writer.WriteByte((byte)i);
                 writer.WriteByte((byte)i);
             }
+
+            writer.Reset();
         }
     }
     public class MirageWriter_Copy : Benchmark
@@ -146,25 +146,21 @@ namespace RunBenchmark
         [BenchmarkMethod(name: "Mirage Copy")]
         protected override void Code()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
-                writer.Reset();
-
-                byte b1 = (byte)i;
-                writer.PadAndCopy(b1);
+                // note PadAndCopy is meant for bigger structs, not byte/ints
+                // would be faster for byte/ints without the `in` keyword
+                writer.PadAndCopy((byte)i);
                 writer.PadAndCopy(i);
                 writer.PadAndCopy(i);
-                ulong u1 = (ulong)i;
-                writer.PadAndCopy(u1);
-                byte b2 = (byte)i;
-                byte b3 = (byte)i;
-                byte b4 = (byte)i;
-                byte b5 = (byte)i;
-                writer.PadAndCopy(b2);
-                writer.PadAndCopy(b3);
-                writer.PadAndCopy(b4);
-                writer.PadAndCopy(b5);
+                writer.PadAndCopy((ulong)i);
+                writer.PadAndCopy((byte)i);
+                writer.PadAndCopy((byte)i);
+                writer.PadAndCopy((byte)i);
+                writer.PadAndCopy((byte)i);
             }
+
+            writer.Reset();
         }
     }
     public class MirrorWriter : Benchmark
@@ -183,10 +179,8 @@ namespace RunBenchmark
         [BenchmarkMethod(name: "Mirror")]
         protected override void Code()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
-                writer.Reset();
-
                 writer.WriteByte((byte)i);
                 writer.WriteInt(i);
                 writer.WriteInt(i);
@@ -196,6 +190,8 @@ namespace RunBenchmark
                 writer.WriteByte((byte)i);
                 writer.WriteByte((byte)i);
             }
+
+            writer.Reset();
         }
     }
     /*
@@ -247,10 +243,8 @@ namespace RunBenchmark
         [BenchmarkMethod(name: "Unity")]
         protected override void Code()
         {
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 50; i++)
             {
-                writer.Seek(0);
-
                 writer.TryBeginWrite(21);
                 writer.WriteValue((byte)i);
                 writer.WriteValue(i);
@@ -261,6 +255,8 @@ namespace RunBenchmark
                 writer.WriteValue((byte)i);
                 writer.WriteValue((byte)i);
             }
+
+            writer.Seek(0);
         }
     }
 }
