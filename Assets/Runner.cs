@@ -70,6 +70,8 @@ namespace RunBenchmark
 
         private void Warmup()
         {
+            BenchmarkHelper.PauseRecording(true);
+
             for (int i = 0; i < WarmupCount; i++)
             {
                 for (int j = 0; j < Iterations; j++)
@@ -77,6 +79,8 @@ namespace RunBenchmark
                     Code();
                 }
             }
+
+            BenchmarkHelper.PauseRecording(false);
         }
         private void Measure()
         {
